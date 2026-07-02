@@ -66,4 +66,45 @@ function showCustomers() {
             <p>Total Amount: ₹${totalAmount}</p>
 
             <button class="btn" onclick="viewCustomer(${index})">View Details</button>
-            
+            function searchCustomer(){
+
+    let text = document.getElementById("search").value.toLowerCase();
+
+    let list = document.getElementById("list");
+
+    list.innerHTML = "";
+
+    customers
+    .filter(c => c.name.toLowerCase().includes(text))
+    .forEach((c,i)=>{
+
+        let totalKg = 0;
+        let totalAmount = 0;
+
+        c.records.forEach(r=>{
+            totalKg += r.kg;
+            totalAmount += r.total;
+        });
+
+        list.innerHTML += `
+        <div class="card">
+            <h3>${c.name}</h3>
+
+            <p>Total KG : ${totalKg}</p>
+
+            <p>Total Amount : ₹${totalAmount}</p>
+
+            <button class="btn"
+            onclick="viewCustomer(${i})">
+            View Ledger
+            </button>
+
+        </div>
+        `;
+    });
+
+    if(text==""){
+        showCustomers();
+    }
+
+}
