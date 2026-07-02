@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Reports</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="header">
+<h1>📊 Reports</h1>
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<input type="date" id="fromDate">
+<input type="date" id="toDate">
+
+<button class="btn" onclick="generateReport()">Generate</button>
+
+</div>
+
+<div class="card">
+<h3 id="summary">Summary</h3>
+</div>
+
+</div>
+
+<div id="reportList" class="container"></div>
+
+<script src="script.js"></script>
+
+<script>
+function generateReport(){
+
+let customers = JSON.parse(localStorage.getItem("customers")) || [];
+
+let from = document.getElementById("fromDate").value;
+let to = document.getElementById("toDate").value;
+
+let kg = 0;
+let total = 0;
+
+let list = document.getElementById("reportList");
+list.innerHTML = "";
+
+customers.forEach(c=>{
+c.records.forEach(r=>{
+
+if((!from || r.date>=from) && (!to || r.date<=to)){
+
+kg += r.kg;
+total += r.total;
+
+list.innerHTML += `
+<div class="card">
+<h3>${c.name}</h3>
+<p>${r.date}</p>
+<p>KG: ${r.kg}</p>
+<p>Total: ₹${r.total}</p>
+</div>
+`;
+}
+
+});
+});
+
+document.getElementById("summary").innerHTML =
+"Total KG: " + kg + " | Total: ₹" + total;
+
+}
+</script>
+
+</body>
+</html>
