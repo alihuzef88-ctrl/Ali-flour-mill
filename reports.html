@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports - Ali Flour Mill</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+<h1>📊 Reports</h1>
+<p>Daily / Monthly Billing Report</p>
+</div>
+
+<!-- NAVIGATION -->
+<div class="container">
+
+<div class="card">
+
+<a href="index.html" class="btn">🏠 Dashboard</a>
+<a href="entry.html" class="btn">➕ New Entry</a>
+<a href="customers.html" class="btn">👤 Customers</a>
+
+</div>
+
+</div>
+
+<!-- FILTER SECTION -->
+<div class="container">
+
+<div class="card">
+
+<h2>📅 Date Filter</h2>
+
+<input type="date" id="fromDate"><br><br>
+<input type="date" id="toDate"><br><br>
+
+<button class="btn" onclick="generateReport()">Generate Report</button>
+
+</div>
+
+</div>
+
+<!-- SUMMARY -->
+<div class="container">
+
+<div class="card" id="summary">
+
+<h2>📊 Summary</h2>
+<p>Total KG: 0</p>
+<p>Total Amount: ₹0</p>
+
+</div>
+
+</div>
+
+<!-- REPORT LIST -->
+<div class="container">
+
+<div id="reportList"></div>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+function generateReport(){
+
+    let customers = JSON.parse(localStorage.getItem("customers")) || [];
+
+    let from = document.getElementById("fromDate").value;
+    let to = document.getElementById("toDate").value;
+
+    let totalKg = 0;
+    let totalAmount = 0;
+
+    let list = document.getElementById("reportList");
+    list.innerHTML = "";
+
+    customers.forEach(c => {
+
+        c.records.forEach(r => {
+
+            if(
+                (!from || r.date >= from) &&
+                (!to || r.date <= to)
+            ){
+
+                totalKg += r.kg;
+                totalAmount += r.total;
+
+                list.innerHTML += `
+                <div class="card">
+                    <h3>${c.name}</h3>
+                    <p>Date: ${r.date}</p>
+                    <p>KG: ${r.kg}</p>
+                    <p>Total: ₹${r.total}</p>
+                    <p>Paid: ₹${r.paid}</p>
+                    <p>Balance: ₹${r.balance}</p>
+                </div>
+                `;
+            }
+        });
+    });
+
+    document.getElementById("summary").innerHTML = `
+        <h2>📊 Summary</h2>
+        <p>Total KG: ${totalKg}</p>
+        <p>Total Amount: ₹${totalAmount}</p>
+    `;
+}
+</script>
+
+</body>
+</html>
