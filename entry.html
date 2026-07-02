@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -22,15 +22,18 @@
 
 <input type="date"><br><br>
 
-<input type="number" placeholder="Total KG"><br><br>
+<input id="kg" type="number" placeholder="Total KG" onkeyup="calculateTotal()"><br><br>
 
-<input type="number" placeholder="₹ Per KG"><br><br>
+<input id="rate" type="number" placeholder="₹ Per KG" onkeyup="calculateTotal()"><br><br>
 
-<input type="number" placeholder="Paid Amount"><br><br>
+<input id="total" type="number" placeholder="Total Amount" readonly><br><br>
 
-<button class="btn">Save Entry</button>
+<input id="paid" type="number" placeholder="Paid Amount" onkeyup="calculateBalance()"><br><br>
 
-</div>
+<input id="balance" type="number" placeholder="Balance" readonly><br><br>
+
+
+
 
 </div>
 
