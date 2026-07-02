@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Entry</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="header">
+<h1>➕ New Entry</h1>
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<input type="text" id="name" placeholder="Customer Name"><br><br>
+<input type="date" id="date"><br><br>
+
+<input type="number" id="kg" placeholder="KG" oninput="calculateTotal()"><br><br>
+<input type="number" id="rate" placeholder="Rate" oninput="calculateTotal()"><br><br>
+
+<input type="number" id="total" placeholder="Total" readonly><br><br>
+
+<input type="number" id="paid" placeholder="Paid" oninput="calculateBalance()"><br><br>
+
+<input type="number" id="balance" placeholder="Balance" readonly><br><br>
+
+<button class="btn" onclick="saveEntry()">Save</button>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
