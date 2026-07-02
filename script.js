@@ -1,6 +1,11 @@
 let customers = JSON.parse(localStorage.getItem("customers")) || [];
 
-/* ================= SAVE ENTRY ================= */
+let editIndex = {
+    customer: null,
+    record: null
+};
+
+/* ================= SAVE / UPDATE ENTRY ================= */
 function saveEntry() {
 
     let name = document.getElementById("name").value;
@@ -12,7 +17,7 @@ function saveEntry() {
     let paid = Number(document.getElementById("paid").value) || 0;
     let balance = total - paid;
 
-    if(name === "" || date === ""){
+    if (name === "" || date === "") {
         alert("Fill all fields");
         return;
     }
@@ -21,35 +26,48 @@ function saveEntry() {
 
     let customer = customers.find(c => c.name === name);
 
-    if(!customer){
+    if (!customer) {
         customer = { name: name, records: [] };
         customers.push(customer);
     }
 
-    customer.records.push(entry);
+    // 👉 EDIT MODE
+    if (editIndex.customer !== null && editIndex.record !== null) {
+
+        customers[editIndex.customer].records[editIndex.record] = entry;
+
+        alert("Updated Successfully ✔️");
+
+        editIndex.customer = null;
+        editIndex.record = null;
+
+    } else {
+
+        customer.records.push(entry);
+
+        alert("Saved Successfully ✔️");
+    }
 
     localStorage.setItem("customers", JSON.stringify(customers));
-
-    alert("Saved Successfully ✔️");
 
     clearForm();
     showCustomers();
 }
 
 /* ================= SHOW CUSTOMERS ================= */
-function showCustomers(){
+function showCustomers() {
 
     let list = document.getElementById("list");
-    if(!list) return;
+    if (!list) return;
 
     list.innerHTML = "";
 
-    customers.forEach((c,i)=>{
+    customers.forEach((c, i) => {
 
         let kg = 0;
         let total = 0;
 
-        c.records.forEach(r=>{
+        c.records.forEach(r => {
             kg += r.kg;
             total += r.total;
         });
@@ -67,7 +85,7 @@ function showCustomers(){
 }
 
 /* ================= VIEW LEDGER ================= */
-function viewCustomer(i){
+function viewCustomer(i) {
 
     let c = customers[i];
     let list = document.getElementById("list");
@@ -79,7 +97,8 @@ function viewCustomer(i){
         </div>
     `;
 
-    c.records.forEach(r=>{
+    c.records.forEach((r, j) => {
+
         list.innerHTML += `
         <div class="card">
             <p>Date: ${r.date}</p>
@@ -87,13 +106,34 @@ function viewCustomer(i){
             <p>Total: ₹${r.total}</p>
             <p>Paid: ₹${r.paid}</p>
             <p>Balance: ₹${r.balance}</p>
+
+            <button class="btn" onclick="editEntry(${i},${j})">✏️ Edit</button>
         </div>
         `;
     });
 }
 
+/* ================= EDIT ENTRY ================= */
+function editEntry(ci, ri) {
+
+    let r = customers[ci].records[ri];
+
+    document.getElementById("name").value = customers[ci].name;
+    document.getElementById("date").value = r.date;
+    document.getElementById("kg").value = r.kg;
+    document.getElementById("rate").value = r.rate;
+    document.getElementById("total").value = r.total;
+    document.getElementById("paid").value = r.paid;
+    document.getElementById("balance").value = r.balance;
+
+    editIndex.customer = ci;
+    editIndex.record = ri;
+
+    alert("Now you can edit and save");
+}
+
 /* ================= SEARCH ================= */
-function searchCustomer(){
+function searchCustomer() {
 
     let val = document.getElementById("search").value.toLowerCase();
     let list = document.getElementById("list");
@@ -101,47 +141,48 @@ function searchCustomer(){
     list.innerHTML = "";
 
     customers
-    .filter(c => c.name.toLowerCase().includes(val))
-    .forEach((c,i)=>{
+        .filter(c => c.name.toLowerCase().includes(val))
+        .forEach((c, i) => {
 
-        let kg = 0;
-        let total = 0;
+            let kg = 0;
+            let total = 0;
 
-        c.records.forEach(r=>{
-            kg += r.kg;
-            total += r.total;
-        });
+            c.records.forEach(r => {
+                kg += r.kg;
+                total += r.total;
+            });
 
-        list.innerHTML += `
+            list.innerHTML += `
         <div class="card">
             <h3>${c.name}</h3>
             <p>KG: ${kg}</p>
             <p>Total: ₹${total}</p>
+
             <button class="btn" onclick="viewCustomer(${i})">Open</button>
         </div>
         `;
-    });
+        });
 
-    if(val === ""){
+    if (val === "") {
         showCustomers();
     }
 }
 
 /* ================= CALC ================= */
-function calculateTotal(){
+function calculateTotal() {
     let kg = Number(document.getElementById("kg").value) || 0;
     let rate = Number(document.getElementById("rate").value) || 0;
     document.getElementById("total").value = kg * rate;
 }
 
-function calculateBalance(){
+function calculateBalance() {
     let total = Number(document.getElementById("total").value) || 0;
     let paid = Number(document.getElementById("paid").value) || 0;
     document.getElementById("balance").value = total - paid;
 }
 
 /* ================= CLEAR ================= */
-function clearForm(){
+function clearForm() {
     document.getElementById("name").value = "";
     document.getElementById("date").value = "";
     document.getElementById("kg").value = "";
@@ -152,4 +193,4 @@ function clearForm(){
 }
 
 /* ================= LOAD ================= */
-window.onload = showCustomers;            
+window.onload = showCustomers;        
