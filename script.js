@@ -1,71 +1,4 @@
-console.log("script loaded");
-
-// Save entry
-function saveEntry() {
-
-    let name = document.getElementById("name").value;
-    let date = document.getElementById("date").value;
-    let kg = Number(document.getElementById("kg").value) || 0;
-    let rate = Number(document.getElementById("rate").value) || 0;
-
-    let total = kg * rate;
-
-    let paid = Number(document.getElementById("paid").value) || 0;
-    let balance = total - paid;
-
-    // check empty fields
-    if(name === "" || date === ""){
-        alert("Please fill Name and Date");
-        return;
-    }
-
-    let entry = {
-        name: name,
-        date: date,
-        kg: kg,
-        rate: rate,
-        total: total,
-        paid: paid,
-        balance: balance
-    };
-
-    let data = JSON.parse(localStorage.getItem("flourData")) || [];
-
-    data.push(entry);
-
-    localStorage.setItem("flourData", JSON.stringify(data));
-
-    alert("Entry Saved Successfully ✔️");
-
-    clearForm();
-
-    showData();
-}
-
-// Show data list
-function showData() {
-
-    let data = JSON.parse(localStorage.getItem("flourData")) || [];
-
-    let list = document.getElementById("list");
-
-    if (!list) return;
-
-    list.innerHTML = "";
-
-    data.forEach((item, index) => {
-
-        list.innerHTML += `
-        <div class="card">
-            <h3>${item.name}</h3>
-            <p>Date: ${item.date}</p>
-            <p>KG: ${item.kg}</p>
-            <p>Rate: ₹${item.rate}</p>
-            <p>Total: ₹${item.total}</p>
-            <p>Paid: ₹${item.paid}</p>
-            <p>Balance: ₹${item.balance}</p>
-
-            <button onclick="deleteEntry(${index})">Delete</button>
+button onclick="deleteEntry(${index})">Delete</button>
         </div>
         `;
     });
@@ -123,3 +56,5 @@ function clearForm(){
 window.onload = function(){
     showData();
 };
+
+            
